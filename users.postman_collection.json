@@ -1,0 +1,137 @@
+{
+	"info": {
+		"_postman_id": "73b7fc46-693e-44e4-a3e9-78cd96b91d20",
+		"name": "users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get-users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Request is successful with a status code of 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check that it returns an array\", function () {\r",
+							"  var jsonData = pm.response.json();\r",
+							"  pm.expect(jsonData).to.be.an(\"array\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost/repos/phpapi/api/users/12345",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"repos",
+						"phpapi",
+						"api",
+						"users",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "save-user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let random = +new Date();\r",
+							"\r",
+							"pm.globals.set(\"name\", `${random}-user`);\r",
+							"pm.globals.set(\"email\", `${random}-user@test.com`);\r",
+							"pm.globals.set(\"phonenumber\", `${random}`);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"User creation was successful\", function () {\r",
+							"  pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Confirm response message\", function () {\r",
+							"  var jsonData = pm.response.json();\r",
+							"  pm.expect(jsonData.message).to.eql(\"User Successfully created\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "{{username}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{email}}",
+							"type": "text"
+						},
+						{
+							"key": "phoneNumber",
+							"value": "{{phonenumber}}",
+							"type": "text"
+						},
+						{
+							"key": "height",
+							"value": "159",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/repos/phpapi/api/users/newUser/12345",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"repos",
+						"phpapi",
+						"api",
+						"users",
+						"newUser",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
